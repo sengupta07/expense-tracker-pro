@@ -1,4 +1,3 @@
-// in /app/onboarding/steps.tsx
 "use client";
 
 import { useFieldArray, type UseFormReturn } from "react-hook-form";
@@ -14,7 +13,6 @@ type StepProps = {
 };
 
 export function Step1({ form }: StepProps) {
-  // Destructure errors from formState to display validation messages
   const {
     formState: { errors },
   } = form;
@@ -31,48 +29,49 @@ export function Step1({ form }: StepProps) {
       </p>
       <div className="space-y-3">
         {fields.map((field, index) => (
-          <div key={field.id} className="p-3 bg-white/5 rounded-lg">
-            <div className="flex items-end gap-2">
-              <div className="flex-1 space-y-2">
-                <Label className="text-gray-300">Category Name</Label>
-                <Input
-                  {...form.register(`categories.${index}.name`)}
-                  placeholder="e.g., Entertainment"
-                  className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
-                />
-              </div>
-              <div className="w-40 space-y-2">
-                <Label className="text-gray-300">Budget (₹)</Label>
-                <Input
-                  type="number"
-                  {...form.register(`categories.${index}.monthlyBudget`, {
-                    valueAsNumber: true,
-                  })}
-                  placeholder="e.g., 5000"
-                  className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
-                />
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => remove(index)}
-                className="text-red-400 hover:bg-red-500/20 hover:text-red-400"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+          // RESPONSIVE: Stacks vertically on mobile, row on desktop
+          <div
+            key={field.id}
+            className="flex flex-col md:flex-row md:items-end gap-2 p-3 bg-white/5 rounded-lg"
+          >
+            <div className="flex-1 space-y-2">
+              <Label className="text-gray-300">Category Name</Label>
+              <Input
+                {...form.register(`categories.${index}.name`)}
+                placeholder="e.g., Entertainment"
+                className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
+              />
+              {errors.categories?.[index]?.name && (
+                <p className="text-xs text-red-400 mt-1">
+                  {errors.categories[index]?.name?.message}
+                </p>
+              )}
             </div>
-            {/* ADDED: Display per-row error messages */}
-            {errors.categories?.[index]?.name && (
-              <p className="text-xs text-red-400 mt-1">
-                {errors.categories[index]?.name?.message}
-              </p>
-            )}
-            {errors.categories?.[index]?.monthlyBudget && (
-              <p className="text-xs text-red-400 mt-1">
-                {errors.categories[index]?.monthlyBudget?.message}
-              </p>
-            )}
+            <div className="w-full md:w-40 space-y-2">
+              <Label className="text-gray-300">Budget (₹)</Label>
+              <Input
+                type="number"
+                {...form.register(`categories.${index}.monthlyBudget`, {
+                  valueAsNumber: true,
+                })}
+                placeholder="e.g., 5000"
+                className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
+              />
+              {errors.categories?.[index]?.monthlyBudget && (
+                <p className="text-xs text-red-400 mt-1">
+                  {errors.categories[index]?.monthlyBudget?.message}
+                </p>
+              )}
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => remove(index)}
+              className="text-red-400 hover:bg-red-500/20 hover:text-red-400 self-end md:self-auto"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
         ))}
         <Button
@@ -83,7 +82,6 @@ export function Step1({ form }: StepProps) {
         >
           <Plus className="h-4 w-4 mr-2" /> Add Category
         </Button>
-        {/* ADDED: Display the "add at least one" error message */}
         {errors.categories?.root && (
           <p className="text-sm text-red-400 text-center mt-2">
             {errors.categories.root.message}
@@ -147,7 +145,11 @@ function ItemsStep({
             </h3>
             {(form.watch(`${fieldName}.${index}.items`) ?? []).map(
               (_, itemIdx) => (
-                <div key={itemIdx} className="flex items-end gap-2">
+                // RESPONSIVE: Stacks vertically on mobile, row on desktop
+                <div
+                  key={itemIdx}
+                  className="flex flex-col md:flex-row md:items-end gap-2"
+                >
                   <div className="flex-1 space-y-2">
                     <Label className="text-gray-300 text-xs">Item Name</Label>
                     <Input
@@ -158,7 +160,7 @@ function ItemsStep({
                       className="bg-white/20 border-0 text-white h-9 focus:ring-1 focus:ring-indigo-400"
                     />
                   </div>
-                  <div className="w-32 space-y-2">
+                  <div className="w-full md:w-32 space-y-2">
                     <Label className="text-gray-300 text-xs">Cost (₹)</Label>
                     <Input
                       type="number"
@@ -175,7 +177,7 @@ function ItemsStep({
                     variant="ghost"
                     size="icon"
                     onClick={() => removeItemRow(index, itemIdx)}
-                    className="text-red-400 hover:bg-red-500/20 hover:text-red-400"
+                    className="text-red-400 hover:bg-red-500/20 hover:text-red-400 self-end md:self-auto"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -222,9 +224,10 @@ export function Step4({ form }: StepProps) {
       </p>
       <div className="space-y-3">
         {fields.map((field, index) => (
-          <div key={field.id} className="p-3 bg-white/5 rounded-lg space-y-1">
-            <div className="grid grid-cols-12 items-end gap-2">
-              <div className="col-span-5 space-y-2">
+          // RESPONSIVE: Stacks vertically on mobile, row on desktop
+          <div key={field.id} className="p-3 bg-white/5 rounded-lg space-y-2">
+            <div className="flex flex-col md:flex-row md:items-end gap-2">
+              <div className="flex-1 space-y-2">
                 <Label className="text-gray-300">Goal Name</Label>
                 <Input
                   {...form.register(`goals.${index}.name`)}
@@ -232,7 +235,7 @@ export function Step4({ form }: StepProps) {
                   className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
                 />
               </div>
-              <div className="col-span-3 space-y-2">
+              <div className="w-full md:w-40 space-y-2">
                 <Label className="text-gray-300">Target (₹)</Label>
                 <Input
                   type="number"
@@ -243,7 +246,7 @@ export function Step4({ form }: StepProps) {
                   className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
                 />
               </div>
-              <div className="col-span-3 space-y-2">
+              <div className="w-full md:w-48 space-y-2">
                 <Label className="text-gray-300">Target Date</Label>
                 <Input
                   type="date"
@@ -251,19 +254,16 @@ export function Step4({ form }: StepProps) {
                   className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400 dark:[color-scheme:dark]"
                 />
               </div>
-              <div className="col-span-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => remove(index)}
-                  className="text-red-400 hover:bg-red-500/20 hover:text-red-400"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => remove(index)}
+                className="text-red-400 hover:bg-red-500/20 hover:text-red-400 self-end md:self-auto"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
-            {/* ADDED: Display per-row goal error messages */}
             {errors.goals?.[index]?.name && (
               <p className="text-xs text-red-400 mt-1 pl-1">
                 {errors.goals[index]?.name?.message}
@@ -285,7 +285,6 @@ export function Step4({ form }: StepProps) {
         >
           <Plus className="h-4 w-4 mr-2" /> Add Goal
         </Button>
-        {/* ADDED: Display the "add at least one" error message */}
         {errors.goals?.root && (
           <p className="text-sm text-red-400 text-center mt-2">
             {errors.goals.root.message}
@@ -317,7 +316,6 @@ export function Step5({ form }: StepProps) {
           placeholder="e.g., 75000"
           className="bg-white/20 border-0 text-white focus:ring-1 focus:ring-indigo-400"
         />
-        {/* ADDED: Display salary error message */}
         {errors.salary && (
           <p className="text-xs text-red-400 mt-1">{errors.salary.message}</p>
         )}
